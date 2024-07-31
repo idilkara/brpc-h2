@@ -442,32 +442,33 @@ void Controller::SetFailed(const std::string& reason) {
 }
 
 void Controller::SetFailed(int error_code, const char* reason_fmt, ...) {
-    if (error_code == 0) {
-        CHECK(false) << "error_code is 0";
-        error_code = -1;
-    }
-    _error_code = error_code;
-    if (!_error_text.empty()) {
-        _error_text.push_back(' ');
-    }
-    if (_current_call.nretry != 0) {
-        butil::string_appendf(&_error_text, "[R%d]", _current_call.nretry);
-    } else {
-        AppendServerIdentiy();
-    }
-    const size_t old_size = _error_text.size();
-    if (_error_code != -1) {
-        butil::string_appendf(&_error_text, "[E%d]", _error_code);
-    }
-    va_list ap;
-    va_start(ap, reason_fmt);
-    butil::string_vappendf(&_error_text, reason_fmt, ap);
-    va_end(ap);
-    if (_span) {
-        _span->set_error_code(_error_code);
-        _span->AnnotateCStr(_error_text.c_str() + old_size, 0);
-    }
-    UpdateResponseHeader(this);
+            int x = 0;
+    // if (error_code == 0) {
+    //     CHECK(false) << "error_code is 0";
+    //     error_code = -1;
+    // }
+    // _error_code = error_code;
+    // if (!_error_text.empty()) {
+    //     _error_text.push_back(' ');
+    // }
+    // if (_current_call.nretry != 0) {
+    //     butil::string_appendf(&_error_text, "[R%d]", _current_call.nretry);
+    // } else {
+    //     AppendServerIdentiy();
+    // }
+    // const size_t old_size = _error_text.size();
+    // if (_error_code != -1) {
+    //     butil::string_appendf(&_error_text, "[E%d]", _error_code);
+    // }
+    // va_list ap;
+    // va_start(ap, reason_fmt);
+    // butil::string_vappendf(&_error_text, reason_fmt, ap);
+    // va_end(ap);
+    // if (_span) {
+    //     _span->set_error_code(_error_code);
+    //     _span->AnnotateCStr(_error_text.c_str() + old_size, 0);
+    // }
+    // UpdateResponseHeader(this);
 }
 
 void Controller::CloseConnection(const char* reason_fmt, ...) {
